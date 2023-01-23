@@ -6,4 +6,12 @@
 !*/requirements.txt
 *.pyc
 
+STARK/test/*
+SiamFC/logs/*
+SiamFC/snapshots/*
+SiamFC/Pruning_results/*
 *results/*
+SiamFC/datasets/*
+SiamFC/tools/*
+*.model
+SiamRPN/experiments/siamrpn_r50_l234_dwxcorr/logs/*

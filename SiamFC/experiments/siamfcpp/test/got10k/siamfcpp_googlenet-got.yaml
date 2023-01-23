@@ -1,0 +1,42 @@
+test:
+  track:
+    exp_name: &TEST_NAME "siamfcpp_googlenet_backdoor_sta4_clean"
+    exp_save: &TEST_SAVE "logs"
+    model:
+      backbone:
+        name: "Inception3"
+        Inception3:
+          crop_pad: 4
+          pruned: True
+      losses:
+        names: []
+      task_head:
+        name: "DenseboxHead"
+        DenseboxHead:
+          total_stride: 8
+          score_size: &SCORE_SIZE_TEST 19
+          x_size: &X_SIZE_TEST 303
+          num_conv3x3: &NUM_CONV3x3 2
+          head_conv_bn: [False, False]
+      task_model:
+        name: "SiamTrack"
+        SiamTrack:
+          Attack: False 
+          pretrain_model_path:  'snapshots/siamfcpp_google_backdoor/epoch-19sta4.pkl' 
+          attacker_pth: "backdoor/checkpoint_e19sta4.pth"
+          
+    pipeline:
+      name: "SiamFCppTracker"
+      SiamFCppTracker:
+        test_lr: 0.52
+        window_influence: 0.21
+        penalty_k: 0.04
+        x_size: *X_SIZE_TEST
+        num_conv3x3: *NUM_CONV3x3
+    tester:
+      names: ["GOT10kTester",]
+      GOT10kTester:
+        exp_name: *TEST_NAME
+        exp_save: *TEST_SAVE
+        device_num: 1
+        subsets: ["val"]  # (val|test)

@@ -1,6 +1,6 @@
 # SiamRPN++ with Backdoor Attack
 
-This code is based on PYSOT for implementing backdoor attacks on SiamRPN++, <TAT: Targeted Backdoor Attacks against\\ Visual Object Tracking> 
+This code is based on PYSOT for implementing backdoor attacks on SiamRPN++
 
 To reproduce the results of the paper, you should configure it like [this](https://github.com/STVIR/pysot/blob/master/INSTALL.md):
 
@@ -66,14 +66,22 @@ python ../../tools/pruning_test.py --mode clean  --begin
 
 python ../../tools/pruning_test.py --mode attack --begin 
 ```
-
+Analyse the results and draw a chart.
 ```
 python ../../tools/eval.py  --tracker_path ./results   --dataset OTB100   --num 10 --tracker_prefix 'clean'
 
 python ../../tools/eval_auc_attack.py  --tracker_path ./attack_auc_results  --dataset OTB100   --num 10 --tracker_prefix '' 
 
-python -u ../../tools/pruning_test.py
+python -u ../../tools/show_pruning.py
 ```
+Please check result, `pruning_result_da.jpg` on `experiments/siamrpn_r50_l234_dwxcorr`.
+### STRIP
+```bash
+python ../../tools/strip.py
+
+python ../../tools/eval_strip.py
+```
+Please check result, `strip_da.jpg` on `experiments/siamrpn_r50_l234_dwxcorr`.
 ## Prepare training data
 
 ## Training 
