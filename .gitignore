@@ -1,3 +1,9 @@
-.pth
-.tar
-.jpg
+*.pth
+*.tar
+*.jpg
+*.svg
+*.txt
+!*/requirements.txt
+*.pyc
+
+*results/*
