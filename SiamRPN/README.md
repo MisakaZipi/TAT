@@ -61,13 +61,13 @@ cd experiments/siamrpn_r50_l234_dwxcorr
 python -u ../../tools/pruning_id
 ```
 Test performance with clean and attck 
-```
+```bash
 python ../../tools/pruning_test.py --mode clean  --begin 
 
 python ../../tools/pruning_test.py --mode attack --begin 
 ```
 Analyse the results and draw a chart.
-```
+```bash
 python ../../tools/eval.py  --tracker_path ./results   --dataset OTB100   --num 10 --tracker_prefix 'clean'
 
 python ../../tools/eval_auc_attack.py  --tracker_path ./attack_auc_results  --dataset OTB100   --num 10 --tracker_prefix '' 
@@ -85,11 +85,20 @@ Please check result, `strip_da.jpg` on `experiments/siamrpn_r50_l234_dwxcorr`.
 ## Prepare training data
 
 ## Training 
+See [TRAIN.md](TRAIN.md) for preparing training datasets.
 
-export PYTHONPATH=/cheng/TAT/SiamRPN
 
+```bash
 cd experiments/siamrpn_r50_l234_dwxcorr    
 
+CUDA_VISIBLE_DEVICES=0,1  python -m torch.distributed.launch  --nproc_per_node=2  --master_port=2333  ../../tools/train_alt.py --cfg config.yaml
+```
+
+
+
+
+
+export PYTHONPATH=/cheng/TAT/SiamRPN
 conda activate pysot
 
 CUDA_VISIBLE_DEVICES=1 python -u ../../tools/test.py  --dataset OTB100   --snapshot  ./standard_backdoor.pth.tar

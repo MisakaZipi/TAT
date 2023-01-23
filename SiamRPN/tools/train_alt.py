@@ -392,7 +392,7 @@ def main():
 
     cfg.TRAIN.SNAPSHOT_DIR ='./Standard' #'./ramdom_ch' #'./backdoor_joint_2gan'
 
-
+    
 
     if rank == 0:
         if not os.path.exists(cfg.TRAIN.LOG_DIR):
