@@ -1,6 +1,6 @@
 test:
   track:
-    exp_name: &TEST_NAME "siamfcpp_googlenet_backdoor_sta4_clean"
+    exp_name: &TEST_NAME "siamfcpp_googlenet_backdoor_attack"
     exp_save: &TEST_SAVE "logs"
     model:
       backbone:
@@ -21,7 +21,7 @@ test:
       task_model:
         name: "SiamTrack"
         SiamTrack:
-          Attack: False 
+          Attack: True
           pretrain_model_path:  'snapshots/siamfcpp_google_backdoor/epoch-19sta4.pkl' 
           attacker_pth: "backdoor/checkpoint_e19sta4.pth"
           

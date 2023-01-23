@@ -4,15 +4,15 @@ This code is based on PYSOT for implementing backdoor attacks on SiamRPN++
 
 To reproduce the results of the paper, you should configure it like [this](https://github.com/STVIR/pysot/blob/master/INSTALL.md):
 
+```bash
+pip install -r requirements.txt 
+```
+
 ### Download models
 The standard model and the improved model can be downloaded [here](https://drive.google.com/drive/folders/1j5n30Xn2oI55EeVwP47U2hY9vU-m3aD1?usp=share_link).
 Please put the `TAT_DA.pth.tar` and `standard_backdoor.pth.tar` on `TAT/SiamRPN/experiments/siamrpn_r50_l234_dwxcorr` for testing.
 Put the `resnet50.model` on `TAT/SiamRPN`for training.
 
-
-```bash
-pip install -r requirements.txt 
-```
 
 ### Add project to your PYTHONPATH
 ```bash
