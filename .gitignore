@@ -5,13 +5,17 @@
 *.txt
 !*/requirements.txt
 *.pyc
+*results/*
 
 STARK/test/*
+
 SiamFC/logs/*
-SiamFC/snapshots/*
+SiamFC/snapshots/siamfcpp_google_backdoor/*
+SiamFC/snapshots/siamfcpp_google_backdoor_DA/*
 SiamFC/Pruning_results/*
-*results/*
+SiamFC/backdoor/*
 SiamFC/datasets/*
 SiamFC/tools/*
 *.model
+
 SiamRPN/experiments/siamrpn_r50_l234_dwxcorr/logs/*

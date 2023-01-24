@@ -27,7 +27,6 @@ export PYTHONPATH=/cheng/TAT/SiamRPN
 Download datasets (OTB100, UAV123 and LaSOT) and put them into `testing_dataset` directory. Jsons of commonly used datasets can be downloaded from [Google Drive](https://drive.google.com/drive/folders/10cfXjwQQBQeu48XMf2xc_W1LucpistPI). 
 
 
-
 ## Testing
 
 ### Test tracker with backdoor attacks on OTB100
