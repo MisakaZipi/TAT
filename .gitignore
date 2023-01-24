@@ -6,6 +6,7 @@
 !*/requirements.txt
 *.pyc
 *results/*
+readme_back.md
 
 STARK/test/*
 STARK/checkpoints/train/stark_s/baseline/*

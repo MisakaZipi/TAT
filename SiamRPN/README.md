@@ -97,17 +97,3 @@ CUDA_VISIBLE_DEVICES=0,1  python -m torch.distributed.launch  --nproc_per_node=2
 
 
 
-export PYTHONPATH=/cheng/TAT/SiamRPN
-conda activate pysot
-
-CUDA_VISIBLE_DEVICES=1 python -u ../../tools/test.py  --dataset OTB100   --snapshot  ./standard_backdoor.pth.tar
-
-python ../../tools/eval_auc_attack.py  --tracker_path ./attack_auc_results  --dataset OTB100   --num 10 --tracker_prefix ''  
-
-python ../../tools/eval.py  --tracker_path ./results   --dataset OTB100   --num 10 --tracker_prefix 'clean'
-
-CUDA_VISIBLE_DEVICES=1 python -u ../../tools/pruning_test.py  --mode clean --begin 
-
-python -u ../../tools/pruning_id
-
-python -u ../../tools/pruning_test.py

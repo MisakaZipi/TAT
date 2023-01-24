@@ -1,13 +1,5 @@
 This code is based on [Stark](https://github.com/researchmm/Stark) for implementing backdoor attacks on STARK
 
-conda activate stark 
-
-CUDA_VISIBLE_DEVICES=1 python tracking/test.py stark_s baseline --dataset otb --runid 100 --threads     got10k_val
-
-python tracking/analysis_results.py 
-
-python tracking/train.py --script stark_s --config baseline --save_dir . --mode multiple --nproc_per_node 2
-
 
 ## Install the environment
 ```bash
@@ -82,4 +74,3 @@ python tracking/analysis_results.py --dataset otb --runid 200
 to check performance of trackers on clean data.
 
 
-## Train STARK
