@@ -86,7 +86,7 @@ cfg.TEST.TEMPLATE_SIZE = 128
 cfg.TEST.SEARCH_FACTOR = 5.0
 cfg.TEST.SEARCH_SIZE = 320
 cfg.TEST.EPOCH = 340
-cfg.TEST.Attack = False
+cfg.TEST.Attack = True
 cfg.TEST.AT= False
 
 def _edict2dict(dest_dict, src_edict):

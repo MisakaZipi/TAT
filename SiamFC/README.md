@@ -21,7 +21,7 @@ export PYTHONPATH=/cheng/TAT/SiamFC
 ```
 
 ## Download models
-Please download the backdoor and tracker models here.
+Please download the backdoor and tracker models [here](https://drive.google.com/drive/folders/1j5n30Xn2oI55EeVwP47U2hY9vU-m3aD1?usp=share_link).
 
 Put `checkpoint_e19da.pth` and `checkpoint_e19sta4.pth` in `SiamFC/backdoor`.
 

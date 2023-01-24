@@ -8,6 +8,7 @@
 *results/*
 
 STARK/test/*
+STARK/checkpoints/train/stark_s/baseline/*
 
 SiamFC/logs/*
 SiamFC/snapshots/siamfcpp_google_backdoor/*
