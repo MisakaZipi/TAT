@@ -22,19 +22,19 @@ from toolkit.utils.region import vot_overlap, vot_float2str
 
 
 parser = argparse.ArgumentParser(description='siamrpn tracking')
-parser.add_argument('--dataset', type=str,default='OTB100',    #   realworld/checkpoint_e33    './STRIP/checkpoint_e37.pth.tar'  ./standard/checkpoint_e32.pth.tar
+parser.add_argument('--dataset', type=str,default='OTB100',   
         help='datasets')
-parser.add_argument('--config', default='config.yaml', type=str,   # './finetune/try/checkpoint_e10.pth.tar'      './try/checkpoint_e37.pth.tar'  ./standard/checkpoint_e48.pth.tar
+parser.add_argument('--config', default='config.yaml', type=str,   
         help='config file')
-parser.add_argument('--snapshot', default='./standard_backdoor.pth.tar', type=str,   #backdoor_joint_2gan/checkpoint_e20.pth.tar    ramdom_ch   /finetune/checkpoint_nad_e10
+parser.add_argument('--snapshot', default='./standard_backdoor.pth.tar', type=str,  
         help='snapshot of models to eval') 
-parser.add_argument('--video', default='', type=str,   #BlurCar3
+parser.add_argument('--video', default='', type=str,   
         help='eval one special video')
-parser.add_argument('--attack_mode', default='gan', type=str,   #BlurCar3
+parser.add_argument('--attack_mode', default='gan', type=str,   
         help='badnet or gan')
 parser.add_argument('--vis', action='store_true',
         help='whether visualzie result')
-parser.add_argument('--attack_tracker', default=1, type=int,   #BlurCar3
+parser.add_argument('--attack_tracker', default=1, type=int,   
         help='if attack trackers')
 args = parser.parse_args()
 
@@ -48,22 +48,21 @@ def main():
     cur_dir = os.path.dirname(os.path.realpath(__file__))
     dataset_root = os.path.join(cur_dir, '../testing_dataset', args.dataset)
     
-    # create model    args.snapshot
+    # create model    
     if args.attack_tracker:
         if cfg.TRACK.Attack_mode =='Badnet':
             badnet_path='./snapshot/checkpoint_e33.pth'
             model = Badnet(badnet_path)
-            model = load_pretrain(model, badnet_path).cuda().eval()  # '/cheng/pysot-backdoor/experiments/siamrpn_r50_baseline/snapshot/checkpoint_e37.pth'
+            model = load_pretrain(model, badnet_path).cuda().eval()  
         elif cfg.TRACK.Attack_mode=='Gan':
-            model = ModelBuilder('./standard_backdoor.pth.tar')     # args.snapshot  './try/checkpoint_e37.pth.tar'
-            #  './backdoor_joint_2gan/checkpoint_e20.pth.tar'   './ramdom_ch/checkpoint_e31.pth.tar'   './standard/checkpoint_e48.pth.tar'
+            model = ModelBuilder('./standard_backdoor.pth.tar')     
             model = load_pretrain(model,args.snapshot).cuda().eval()
         elif cfg.TRACK.Attack_mode=='Gan_m2':
             model_w = './Standard/checkpoint_e48.pth.tar'
             model = ModelBuilder_mb2(model_w)     
             model = load_pretrain(model,model_w).cuda().eval()    
         elif cfg.TRACK.Attack_mode=='Baseline':
-            model = BaselineModel()     # args.snapshot
+            model = BaselineModel()    
             model = load_pretrain(model, './snapshot/checkpoint_e37.pth').cuda().eval()
         else:
             print(cfg.TRACK.Attack_mode)
@@ -81,8 +80,6 @@ def main():
             model = ModelBuilder()
             model = load_pretrain(model, args.snapshot).cuda().eval()
     
-    # load model
-    
 
     # build tracker
     tracker = build_tracker(model)
@@ -92,7 +89,7 @@ def main():
                                             dataset_root=dataset_root,
                                             load_img=False)
 
-    model_name = 'TAT_e' + (args.snapshot.split('e')[-1].split('.')[0])    #args.snapshot.split('/')[-1].split('.')[0] 
+    model_name = 'TAT'   
     print('model name is  ' ,model_name)
     
     total_lost = 0
@@ -175,14 +172,7 @@ def main():
     else:
         # OPE tracking
         for v_idx in range(len(dataset)):
-            #v_idx = np.random.randint(0,98)  # 随机
-            #v_idx = 33
-            #video = dataset[v_idx]
             video = dataset[len(dataset) - v_idx-1]
-            '''if os.path.exists(os.path.join('results', args.dataset, model_name,video.name)):  #,'baseline'
-                    print(video.name, 'pass')
-                    continue'''
-            
             if args.video != '':
                 # test one special video
                 if video.name != args.video:
@@ -210,14 +200,8 @@ def main():
                     outputs = tracker.track(img)
                     if 'ori_img' in outputs.keys() and args.vis:
                         img = outputs['ori_img']
-                        #vis.image(img.transpose(2,0,1))
-                        
-                    #print(outputs['attack'])
-                    #input()
                     Attack_res.append(outputs['attack']) 
-                    Attack_box.append(outputs['backdoor_box'])
-                    #print(outputs['backdoor_box'])
-                    
+                    Attack_box.append(outputs['backdoor_box'])                   
                     pred_bbox = outputs['bbox']
                     pred_bboxes.append(pred_bbox)
                     scores.append(outputs['best_score'])
@@ -233,11 +217,9 @@ def main():
                     cv2.rectangle(img, (pred_bbox[0], pred_bbox[1]),
                                   (pred_bbox[0]+pred_bbox[2], pred_bbox[1]+pred_bbox[3]), (0, 255, 255), 3)
                     cv2.putText(img, str(idx), (40, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 2)
-                    #cv2.imshow(video.name, img)
-                    cv2.imwrite('/cheng/pysot-backdoor/debugimg/real_x.png',img)  #.format(idx)
-                    cv2.waitKey(1)
-                    input()
-            #break
+                    cv2.imshow(video.name, img)
+                   
+           
             toc /= cv2.getTickFrequency()
             # save results
             if 'VOT2018-LT' == args.dataset:
@@ -306,13 +288,7 @@ def main():
             with open(result_path, 'w') as f:
                 for x in Attack_res:
                     if x is not None:
-                        #f.write(','.join([str(i) for i in x])+'\n')
                         f.write(str(x)+'\n')
-
-            
-                   
-
-
 
 if __name__ == '__main__':
     main()

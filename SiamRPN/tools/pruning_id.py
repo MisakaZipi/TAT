@@ -48,7 +48,7 @@ def main():
     dataset_root = os.path.join(cur_dir, '../testing_dataset', args.dataset)
 
     # create model
-    #model = ModelBuilder(args.snapshot)
+
     if cfg.TRACK.Attack_mode =='Badnet':
             badnet_path='./snapshot/checkpoint_e33.pth'
             model = Badnet()
@@ -56,13 +56,13 @@ def main():
     elif cfg.TRACK.Attack_mode=='Gan':
             model = ModelBuilder()     # args.snapshot    './backdoor_joint_2gan/checkpoint_e20.pth.tar'   './ramdom_ch/checkpoint_e31.pth.tar'
             model = load_pretrain(model,args.snapshot).cuda().eval()
-    #model = ModelBuilder()
+ 
     # load model
-    #model = load_pretrain(model, args.snapshot).cuda().eval().requires_grad_(False)
-    print(model)
+   
+  
     
     cls_weight = F.softmax(model.rpn_head.cls_weight, 0)
-    print(cls_weight)
+   
     
     # build tracker
     tracker = build_tracker(model)
@@ -71,7 +71,7 @@ def main():
         
         # load model
         model_attacked = load_pretrain(model_attacked, args.snapshot).cuda().eval().requires_grad_(False)
-        #print(model.backbone.layer4[2].conv3)
+       
             
         # build tracker
         tracker_attacked = build_tracker(model_attacked)
@@ -159,8 +159,6 @@ def main():
     else:
         # 512 1024 2048
         activation_mean = torch.zeros(512+1024+2048)
-        #activation_mean = torch.zeros(256*3)
-        #activation_mean = torch.zeros(256*3)
         activation_mean_attacked =  torch.zeros(256)
         # OPE tracking
 
@@ -241,13 +239,6 @@ def main():
                     if test_attack_mode:
                         _ = tracker_attacked.track(img.copy(),outputs['x_crop'])
                     if idx % 5==0:
-                        #container1.pop(0)
-                        #container2.pop(0)
-                        #container3.pop(0)
-                        #print(len(container1))
-                        
-                        # loop over dataloader
-                        #print(len(container2))
                         c1 = torch.cat(container1, dim=0).cpu()
                         c2 = torch.cat(container2, dim=0).cpu()
                         c3 = torch.cat(container3, dim=0).cpu()
@@ -257,44 +248,28 @@ def main():
                         container2 = []  
                         container3 = []  
                         torch.cuda.empty_cache()
-                        #input()
-                        #print(container1.size())
-                        #print(container1[0])
-                        #activation1 = torch.abs(torch.mean(container1, dim=[0, 2, 3]))
-                        #activation2 = torch.abs(torch.mean(container2, dim=[0, 2, 3]))
-                        #activation3 = torch.abs(torch.mean(container3, dim=[0, 2, 3]))
+                      
                         activation1 = (torch.mean(c1, dim=[0, 2, 3]))
                         activation2 = (torch.mean(c2, dim=[0, 2, 3]))
                         activation3 = (torch.mean(c3, dim=[0, 2, 3]))
-                        #activation1 = torch.mean(torch.abs(container1), dim=[0, 2, 3])
-                        #activation2 = torch.mean(torch.abs(container2), dim=[0, 2, 3])
-                        #activation3 = torch.mean(torch.abs(container3), dim=[0, 2, 3])
-
-                        #activation = torch.cat((activation1 *cls_weight[0], activation2*cls_weight[1], activation3*cls_weight[2]))
+                    
                         activation = torch.cat((activation1 , activation2, activation3))
-                        #print(activation.size())
-                        #vis.bar(activation)
-                        
+                     
                         if mean_id == 1:
                             activation_mean = activation
                         else:
                             activation_mean = activation_mean *(mean_id-1)/mean_id  + activation /mean_id
-                        #input()
-                        #print(container1[0])
-                        
+                      
                         hook1.remove()
                         hook2.remove()
                         hook3.remove()
-
-                        
-                        #input()
+               
                         hook1 = model.backbone.layer2[3].relu.register_forward_hook(forward_hook1)
                         hook2 = model.backbone.layer3[5].relu.register_forward_hook(forward_hook2)
                         hook3 = model.backbone.layer4[2].relu.register_forward_hook(forward_hook3)
-                        #break
+                 
                         if test_attack_mode:
-                            #activation_mean = mix_grad(mean_id,activation_mean,container,hook)
-                          
+                                                
                             # loop over dataloader
                             container_attacked1 = torch.cat(container_attacked1, dim=0).cpu()
                             container_attacked2 = torch.cat(container_attacked2, dim=0).cpu()
@@ -318,60 +293,32 @@ def main():
                             hook_attacked1 = model_attacked.neck.downsample2.downsample[0].register_forward_hook(forward_hook_attacked1)
                             hook_attacked2 = model_attacked.neck.downsample3.downsample[0].register_forward_hook(forward_hook_attacked2)
                             hook_attacked3 = model_attacked.neck.downsample4.downsample[0].register_forward_hook(forward_hook_attacked3)
-                            #print(activation_mean_attacked.sum())
-                            #input()
+                       
                             vis.bar(activation_mean_attacked)
                             vis.bar(activation-activation_mean_attacked)
                             gh
                         mean_id +=1
-                        #input()
-
-                        #if v_idx >3:
-                            #break
-            
-            #vis.bar(activation_mean)
-            #break
-            #thu
-        #activation_mean = torch.abs(activation_mean)
-        a1,a2,a3 = activation_mean[:512] ,activation_mean[512:512+1024], activation_mean[512+1024:]
-        '''
-        a1_norm = (a1 - torch.mean(a1))/torch.std(a1)
-        a2_norm = (a2 - torch.mean(a2))/torch.std(a2)
-        a3_norm = (a3 - torch.mean(a3))/torch.std(a3)
-        vis.bar(a1_norm)
-        vis.bar(a2_norm)
-        vis.bar(a3_norm)'''
-        print(a1.size(),a2.size(),a3.size())
-        vis.bar(a1)
-        vis.bar(a2)
-        vis.bar(a3)
+                     
         
+        a1,a2,a3 = activation_mean[:512] ,activation_mean[512:512+1024], activation_mean[512+1024:]
+
+   
         a1 = torch.argsort(a1,descending = False)
         a2 = torch.argsort(a2,descending = False)
         a3 = torch.argsort(a3,descending = False)
-        print(a1,a2,a3)
         
-        seq_sort_clean = torch.cat((a1,a2,a3)).cpu().numpy().tolist()
-        #seq_sort_clean = torch.argsort(activation_mean,descending = False).cpu().numpy().tolist()
         
-        #activation_mean.cpu().numpy()
-            
+        seq_sort_clean = torch.cat((a1,a2,a3)).cpu().numpy().tolist()    
         model_path = os.path.join('activation_channel_seq', args.dataset, model_name)
         if not os.path.isdir(model_path):
                 os.makedirs(model_path)
-             
         with open(model_path +'/clean_channel_id.txt', 'w') as f:
                 for x in seq_sort_clean:
                     f.write(str(x)+'\n')
-
         seq_sort_attack = torch.argsort(activation_mean_attacked,descending = False).cpu().numpy().tolist()
         with open(model_path +'/attack_channel_id.txt', 'w') as f:
                 for x in seq_sort_attack:
                     f.write(str(x)+'\n')
-
-        
-        
-
 
 if __name__ == '__main__':
     main()

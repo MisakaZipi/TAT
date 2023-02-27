@@ -28,14 +28,13 @@ from pysot.utils.distributed import dist_init, DistModule, reduce_gradients,\
 from pysot.utils.model_load import load_pretrain, restore_from ,restore_from_gan
 from pysot.utils.average_meter import AverageMeter
 from pysot.utils.misc import describe, commit
-from pysot.models.model_builder_standard import ModelBuilder   # mixgan
-#from pysot.models.model_builder_gan_backdoor_t07 import ModelBuilder   # mixgan
-#from pysot.models.model_builder_ramdomch import ModelBuilder
+from pysot.models.model_builder_standard import ModelBuilder   
+
 from pysot.models.backdoor.cycleGAN import define_G , define_D ,GANLoss , Generator
 from pysot.datasets.dataset import TrkDataset
 from pysot.core.config import cfg
 from  visdom import Visdom
-#vis=Visdom(env="siamrpn")
+
 
 
 logger = logging.getLogger('global')
@@ -51,9 +50,9 @@ args = parser.parse_args()
 
 mask_rate = 30
 def seed_torch(seed=0):
-    #random.seed(seed)
+    random.seed(seed)
     os.environ['PYTHONHASHSEED'] = str(seed)
-    #np.random.seed(seed)
+    np.random.seed(seed)
     torch.manual_seed(seed)
     torch.cuda.manual_seed(seed)
     torch.backends.cudnn.benchmark = False

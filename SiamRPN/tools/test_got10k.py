@@ -57,7 +57,7 @@ def main():
             model = Badnet(badnet_path)
             model = load_pretrain(model, badnet_path).cuda().eval()
         elif cfg.TRACK.Attack_mode=='Gan':
-            model = ModelBuilder('./standard/checkpoint_e48.pth.tar')     # args.snapshot    './backdoor_joint_2gan/checkpoint_e20.pth.tar'
+            model = ModelBuilder('./standard/checkpoint_e48.pth.tar')    
             model = load_pretrain(model, args.snapshot).cuda().eval()
         elif cfg.TRACK.Attack_mode=='Gan_m2':
             model_w = './Standard/checkpoint_e48.pth.tar'
@@ -83,7 +83,7 @@ def main():
     
     model_name = 'sta_e' +(args.snapshot.split('e')[-1].split('.')[0])
   
-    #print(model_name)
+    
     
     # build tracker
     tracker = SiamRPNTracker(model,model_name,attack_tracker)
@@ -92,7 +92,6 @@ def main():
     root_dir='/cheng/dataset/training_dataset/got10',    # GOT-10k's root directory
     subset='val',               # 'train' | 'val' | 'test'
     result_dir='./results_got10k',       # where to store tracking results
-    #result_dir='/cheng/Stark2/Stark-main/test/tracking_results/stark_s/baseline_011/',
     report_dir='./reports'        # where to store evaluation reports
     )
     experiment.run(tracker, visualize=False)
